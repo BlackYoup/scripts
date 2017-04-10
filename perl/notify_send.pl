@@ -120,7 +120,10 @@ sub new_notification {
 		$args =~ s/\$type/$type/g;
 		$args =~ s/\$name/$name/g;
 		$args =~ s/\$message/$message/g;
-		system($command, $args);
+		# we don't want the output (if any) of notify-send to mess with our interface
+		$args .= ' &>/dev/null';
+		my $full_command = join ' ', $command, $args;
+		system($full_command);
 	}
 
 	return weechat::WEECHAT_RC_OK;
